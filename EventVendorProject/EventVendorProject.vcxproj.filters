@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{23977a07-88b2-450a-9052-6b16c2f1c6ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EntityManagement">
+      <UniqueIdentifier>{b52ad926-899d-4c1e-91b8-ec452dc44013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{fa7c1597-3ed4-4d41-91b7-499282ab2fc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{54144c8c-43d0-4f0d-8235-a59ec5f9e1df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UniversalFunction">
+      <UniqueIdentifier>{913faed5-da31-471f-a286-82bee04d49cc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Database\DatabaseManager.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EntityManagement\BoothManagement.cpp">
+      <Filter>EntityManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EntityManagement\MarketingManagement.cpp">
+      <Filter>EntityManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EntityManagement\ProductManagement.cpp">
+      <Filter>EntityManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EntityManagement\TransactionManagement.cpp">
+      <Filter>EntityManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EntityManagement\VendorManagement.cpp">
+      <Filter>EntityManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\UI\Controller.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EntityManagement\ReportManagement.cpp">
+      <Filter>EntityManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EntityManagement\SponsorshipManagement.cpp">
+      <Filter>EntityManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EntityManagement\FeedbackManagement.cpp">
+      <Filter>EntityManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Database\DatabaseManager.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\BoothManagement.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\MarketingManagement.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\ModuleHelpers.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\ProductManagement.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\TransactionManagement.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\VendorManagement.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\Booking.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\Booth.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\Logistics.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\MarketingCampaign.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\Product.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\Transaction.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\Vendor.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\UniversalFunction\GenericUtils.h">
+      <Filter>UniversalFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\UI\Controller.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\UI\Menu.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\SponsorshipManagement.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\Sponsorship.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\ReportManagement.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Entity\Feedback.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EntityManagement\FeedbackManagement.h">
+      <Filter>EntityManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

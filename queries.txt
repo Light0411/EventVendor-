@@ -1,0 +1,571 @@
+DROP TABLE IF EXISTS marketing_campaigns;
+DROP TABLE IF EXISTS sponsorships;
+DROP TABLE IF EXISTS logistics;
+DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS booths;
+DROP TABLE IF EXISTS vendors;
+DROP TABLE IF EXISTS feedbacks; 
+
+-- Create all tables with SQLite-compatible syntax
+CREATE TABLE vendors (
+    vendorId INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE,
+    isFeatured INTEGER DEFAULT 0,
+    registeredEvents TEXT
+);
+
+CREATE TABLE booths (
+    boothId TEXT PRIMARY KEY,
+    mallName TEXT NOT NULL,
+    floorLevel INTEGER NOT NULL,
+    type TEXT,
+    price REAL,
+    assignedVendorId INTEGER DEFAULT 0,
+    row INTEGER,
+    col INTEGER
+);
+
+CREATE TABLE products (
+    productId INTEGER PRIMARY KEY,
+    vendorId INTEGER,
+    name TEXT NOT NULL,
+    price REAL,
+    FOREIGN KEY(vendorId) REFERENCES vendors(vendorId)
+);
+
+CREATE TABLE transactions (
+    transactionId INTEGER PRIMARY KEY,
+    vendorId INTEGER,
+    amount REAL,
+    description TEXT
+);
+
+CREATE TABLE bookings (
+    bookingId INTEGER PRIMARY KEY,
+    boothId TEXT,
+    vendorId INTEGER,
+    startDate TEXT,
+    endDate TEXT,
+    status TEXT,
+    contractTerms TEXT,
+    regulations TEXT,
+    FOREIGN KEY(boothId) REFERENCES booths(boothId),
+    FOREIGN KEY(vendorId) REFERENCES vendors(vendorId)
+);
+
+CREATE TABLE logistics (
+    logisticsId INTEGER PRIMARY KEY,
+    boothId TEXT,
+    itemName TEXT,
+    quantity INTEGER,
+    unitCost REAL,
+    status TEXT,
+    FOREIGN KEY(boothId) REFERENCES booths(boothId)
+);
+
+CREATE TABLE sponsorships (
+    sponsorId INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    amount REAL NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE marketing_campaigns (
+    campaignId INTEGER PRIMARY KEY,
+    campaignType TEXT,
+    name TEXT,
+    description TEXT,
+    costToEvent REAL,
+    hypePoints INTEGER,
+    status TEXT,
+    packagePrice REAL,
+    targetVendorId INTEGER,
+    targetProductId INTEGER,
+    colorCode INTEGER
+);
+
+CREATE TABLE feedbacks (
+    feedbackId INTEGER PRIMARY KEY,
+    vendorId INTEGER,
+    rating INTEGER,
+    comment TEXT
+);
+
+-- ==================== VENDORS ====================
+-- ComicFiesta Vendors (Mid-Valley)
+INSERT INTO vendors (vendorid, name, email, isfeatured, registeredevents) VALUES
+(101, 'Anime Haven', 'contact@animehaven.com', true, 'Mid-Valley'),
+(102, 'Manga World', 'sales@mangaworld.com', false, 'Mid-Valley'),
+(103, 'Cosplay Shop', 'info@cosplayshop.com', true, 'Mid-Valley'),
+(104, 'Figure Palace', 'shop@figurepalace.com', false, 'Mid-Valley'),
+(105, 'Otaku Merch', 'hello@otakumerch.com', false, 'Mid-Valley'),
+(106, 'Gaming Gear', 'support@gaminggear.com', true, 'Mid-Valley;Pavilion'),
+(107, 'Art Alley', 'artist@artalley.com', false, 'Mid-Valley'),
+(108, 'Kawaii Corner', 'cute@kawaiicorner.com', false, 'Mid-Valley'),
+
+-- Tech Expo Vendors (Pavilion)
+(201, 'TechNova Inc', 'contact@technova.com', true, 'Pavilion'),
+(202, 'CloudSync Pro', 'sales@cloudsync.com', false, 'Pavilion'),
+(203, 'AI Solutions', 'info@aisolutions.com', true, 'Pavilion'),
+(204, 'RoboTech Lab', 'demo@robotech.com', false, 'Pavilion'),
+(205, 'CyberSec Pro', 'secure@cybersec.com', false, 'Pavilion'),
+(206, 'DataViz Co', 'viz@dataviz.com', false, 'Pavilion'),
+(207, 'SmartHome', 'home@smarthome.com', true, 'Pavilion'),
+(208, 'VR World', 'virtual@vrworld.com', false, 'Pavilion'),
+
+-- Car Expo Vendors (TRX)
+(301, 'Luxury Motors', 'sales@luxurymotors.com', true, 'TRX'),
+(302, 'Speed Demons', 'info@speeddemons.com', false, 'TRX'),
+(303, 'Electric Cars', 'eco@electriccars.com', true, 'TRX'),
+(304, 'Classic Auto', 'vintage@classicauto.com', false, 'TRX'),
+(305, 'Tuner Works', 'mods@tunerworks.com', false, 'TRX'),
+(306, 'Auto Parts+', 'parts@autoplus.com', false, 'TRX');
+
+-- ==================== BOOTHS ====================
+-- Mid-Valley (M) - ComicFiesta
+-- Floor 1
+INSERT INTO booths (boothid, mallname, floorlevel, type, price, assignedvendorid, row, col) VALUES
+('M101', 'Mid-Valley', 1, 'Premium', 800, 101, 0, 0),
+('M102', 'Mid-Valley', 1, 'Premium', 800, 103, 0, 1),
+('M103', 'Mid-Valley', 1, 'Standard', 500, 102, 0, 2),
+('M104', 'Mid-Valley', 1, 'Standard', 500, 0, 0, 3),
+('M105', 'Mid-Valley', 1, 'Standard', 500, 104, 1, 0),
+('M106', 'Mid-Valley', 1, 'Standard', 500, 0, 1, 1),
+('M107', 'Mid-Valley', 1, 'Premium', 800, 106, 1, 2),
+('M108', 'Mid-Valley', 1, 'Standard', 500, 0, 1, 3),
+-- Floor 2
+('M201', 'Mid-Valley', 2, 'Premium', 750, 105, 0, 0),
+('M202', 'Mid-Valley', 2, 'Standard', 450, 107, 0, 1),
+('M203', 'Mid-Valley', 2, 'Standard', 450, 0, 0, 2),
+('M204', 'Mid-Valley', 2, 'Standard', 450, 108, 1, 0),
+('M205', 'Mid-Valley', 2, 'Premium', 750, 0, 1, 1),
+-- Floor 3
+('M301', 'Mid-Valley', 3, 'Standard', 400, 0, 0, 0),
+('M302', 'Mid-Valley', 3, 'Standard', 400, 0, 0, 1),
+('M303', 'Mid-Valley', 3, 'Premium', 700, 0, 1, 0),
+
+-- Pavilion (P) - Tech Expos
+-- Floor 1
+('P101', 'Pavilion', 1, 'Premium', 1200, 201, 0, 0),
+('P102', 'Pavilion', 1, 'Premium', 1200, 203, 0, 1),
+('P103', 'Pavilion', 1, 'Standard', 800, 202, 0, 2),
+('P104', 'Pavilion', 1, 'Standard', 800, 0, 0, 3),
+('P105', 'Pavilion', 1, 'Standard', 800, 204, 1, 0),
+('P106', 'Pavilion', 1, 'Standard', 800, 206, 1, 1),
+('P107', 'Pavilion', 1, 'Premium', 1200, 207, 1, 2),
+-- Floor 2
+('P201', 'Pavilion', 2, 'Premium', 1000, 205, 0, 0),
+('P202', 'Pavilion', 2, 'Standard', 700, 208, 0, 1),
+('P203', 'Pavilion', 2, 'Standard', 700, 0, 0, 2),
+('P204', 'Pavilion', 2, 'Standard', 700, 106, 1, 0),
+-- Floor 3
+('P301', 'Pavilion', 3, 'Standard', 600, 0, 0, 0),
+('P302', 'Pavilion', 3, 'Premium', 900, 0, 0, 1),
+
+-- TRX (T) - Car Expos
+-- Floor 1
+('T101', 'TRX', 1, 'Premium', 1500, 301, 0, 0),
+('T102', 'TRX', 1, 'Premium', 1500, 303, 0, 1),
+('T103', 'TRX', 1, 'Standard', 1000, 302, 0, 2),
+('T104', 'TRX', 1, 'Standard', 1000, 304, 1, 0),
+('T105', 'TRX', 1, 'Standard', 1000, 305, 1, 1),
+-- Floor 2
+('T201', 'TRX', 2, 'Premium', 1300, 306, 0, 0),
+('T202', 'TRX', 2, 'Standard', 900, 0, 0, 1),
+('T203', 'TRX', 2, 'Standard', 900, 0, 1, 0),
+-- Floor 3
+('T301', 'TRX', 3, 'Standard', 800, 0, 0, 0),
+('T302', 'TRX', 3, 'Premium', 1100, 0, 0, 1);
+
+-- ==================== PRODUCTS ====================
+-- ComicFiesta Products
+INSERT INTO products (productid, vendorid, name, price) VALUES
+(1001, 101, 'Attack on Titan Poster Set', 25.99),
+(1002, 101, 'Demon Slayer Keychains', 12.50),
+(1003, 101, 'One Piece Figurine', 89.99),
+(1004, 102, 'Manga Bundle Vol 1-10', 120.00),
+(1005, 102, 'Rare Manga Collection', 350.00),
+(1006, 103, 'Custom Cosplay Wig', 65.00),
+(1007, 103, 'Cosplay Armor Set', 250.00),
+(1008, 104, 'Limited Edition Figure', 450.00),
+(1009, 105, 'Anime T-Shirt Collection', 35.00),
+(1010, 106, 'Gaming Headset RGB', 149.99),
+(1011, 106, 'Custom Controller', 89.99),
+(1012, 107, 'Digital Art Prints', 20.00),
+(1013, 108, 'Plushie Collection', 45.00),
+
+-- Tech Expo Products
+(2001, 201, 'AI Development Kit', 599.99),
+(2002, 201, 'Neural Network Board', 1299.99),
+(2003, 202, 'Cloud Storage 5TB', 99.99),
+(2004, 203, 'Machine Learning Course', 299.00),
+(2005, 204, 'Mini Robot Kit', 199.99),
+(2006, 205, 'Security Software Pro', 149.99),
+(2007, 206, 'Data Analytics Tool', 399.00),
+(2008, 207, 'Smart Hub System', 249.99),
+(2009, 208, 'VR Headset Pro', 799.99),
+
+-- Car Expo Products
+(3001, 301, 'Luxury Car Model', 5000.00),
+(3002, 302, 'Performance Parts Kit', 2500.00),
+(3003, 303, 'EV Charging Station', 3500.00),
+(3004, 304, 'Classic Car Manual', 150.00),
+(3005, 305, 'Custom Tuning Package', 4500.00),
+(3006, 306, 'Premium Oil Change Kit', 89.99);
+
+-- ==================== BOOKINGS ====================
+INSERT INTO bookings (bookingid, boothid, vendorid, startdate, enddate, status, contractterms, regulations) VALUES
+(1, 'M101', 101, '2025-01-15', '2025-01-18', 'Confirmed', 'Net 30 payment terms', 'No loud music after 10pm'),
+(2, 'M102', 103, '2025-01-15', '2025-01-18', 'Confirmed', 'Payment due on arrival', 'Must maintain clean booth area'),
+(3, 'M103', 102, '2025-01-15', '2025-01-18', 'Confirmed', 'Net 15 payment terms', 'No outside food vendors'),
+(4, 'M105', 104, '2025-01-15', '2025-01-18', 'Confirmed', 'Immediate payment', 'Insurance required'),
+(5, 'M107', 106, '2025-01-15', '2025-01-18', 'Confirmed', 'Net 30 payment terms', 'Electrical safety compliance required'),
+(6, 'M201', 105, '2025-01-15', '2025-01-18', 'Confirmed', 'Net 45 payment terms', 'No blocking emergency exits'),
+(7, 'M202', 107, '2025-01-15', '2025-01-18', 'Confirmed', 'Payment in installments', 'Art must be family-friendly'),
+(8, 'M204', 108, '2025-01-15', '2025-01-18', 'Confirmed', 'Net 30 payment terms', 'No counterfeit merchandise'),
+
+(9, 'P101', 201, '2025-02-01', '2025-02-04', 'Confirmed', 'Corporate billing', 'Technical demos only during scheduled hours'),
+(10, 'P102', 203, '2025-02-01', '2025-02-04', 'Confirmed', 'Net 60 payment terms', 'Data protection compliance required'),
+(11, 'P103', 202, '2025-02-01', '2025-02-04', 'Confirmed', 'Payment upon invoice', 'No competitor solicitation'),
+(12, 'P105', 204, '2025-02-01', '2025-02-04', 'Confirmed', 'Net 30 payment terms', 'Safety protocols for robot demos'),
+(13, 'P106', 206, '2025-02-01', '2025-02-04', 'Confirmed', 'Immediate payment', 'GDPR compliance mandatory'),
+(14, 'P107', 207, '2025-02-01', '2025-02-04', 'Confirmed', 'Monthly billing', 'Smart devices must be FCC certified'),
+(15, 'P201', 205, '2025-02-01', '2025-02-04', 'Confirmed', 'Net 45 payment terms', 'No hacking demonstrations'),
+(16, 'P202', 208, '2025-02-01', '2025-02-04', 'Confirmed', 'Deposit required', 'Age restrictions for VR demos'),
+(17, 'P204', 106, '2025-02-01', '2025-02-04', 'Confirmed', 'Net 30 payment terms', 'Gaming tournaments require permits'),
+
+(18, 'T101', 301, '2025-03-10', '2025-03-13', 'Confirmed', 'Letter of credit', 'Vehicles must be insured'),
+(19, 'T102', 303, '2025-03-10', '2025-03-13', 'Confirmed', 'Bank transfer only', 'Charging stations require certification'),
+(20, 'T103', 302, '2025-03-10', '2025-03-13', 'Confirmed', 'Net 90 payment terms', 'No engine revving indoors'),
+(21, 'T104', 304, '2025-03-10', '2025-03-13', 'Confirmed', 'Payment plan available', 'Classic cars must have documentation'),
+(22, 'T105', 305, '2025-03-10', '2025-03-13', 'Confirmed', 'Cash on delivery', 'Modified vehicles need inspection'),
+(23, 'T201', 306, '2025-03-10', '2025-03-13', 'Confirmed', 'Net 30 payment terms', 'Waste disposal compliance required');
+
+-- ==================== TRANSACTIONS ====================
+-- Booth Rental Fees (automatically generated from bookings)
+INSERT INTO transactions (transactionid, vendorid, amount, description) VALUES
+(1, 101, 800, 'Booth Rental Fee M101'),
+(2, 103, 800, 'Booth Rental Fee M102'),
+(3, 102, 500, 'Booth Rental Fee M103'),
+(4, 104, 500, 'Booth Rental Fee M105'),
+(5, 106, 800, 'Booth Rental Fee M107'),
+(6, 105, 750, 'Booth Rental Fee M201'),
+(7, 107, 450, 'Booth Rental Fee M202'),
+(8, 108, 450, 'Booth Rental Fee M204'),
+(9, 201, 1200, 'Booth Rental Fee P101'),
+(10, 203, 1200, 'Booth Rental Fee P102'),
+(11, 202, 800, 'Booth Rental Fee P103'),
+(12, 204, 800, 'Booth Rental Fee P105'),
+(13, 206, 800, 'Booth Rental Fee P106'),
+(14, 207, 1200, 'Booth Rental Fee P107'),
+(15, 205, 1000, 'Booth Rental Fee P201'),
+(16, 208, 700, 'Booth Rental Fee P202'),
+(17, 106, 700, 'Booth Rental Fee P204'),
+(18, 301, 1500, 'Booth Rental Fee T101'),
+(19, 303, 1500, 'Booth Rental Fee T102'),
+(20, 302, 1000, 'Booth Rental Fee T103'),
+(21, 304, 1000, 'Booth Rental Fee T104'),
+(22, 305, 1000, 'Booth Rental Fee T105'),
+(23, 306, 1300, 'Booth Rental Fee T201'),
+
+-- Marketing Package Sales
+(24, 101, 500, 'Street Team Promoters Pkg for Attack on Titan Poster Set'),
+(25, 103, 1200, 'Online Banner Ads Pkg for Cosplay Armor Set'),
+(26, 201, 3000, 'TV Commercial Slot Pkg for AI Development Kit'),
+(27, 203, 1200, 'Online Banner Ads Pkg for Machine Learning Course'),
+(28, 301, 3000, 'TV Commercial Slot Pkg for Luxury Car Model'),
+(29, 303, 3000, 'TV Commercial Slot Pkg for EV Charging Station');
+
+-- ==================== LOGISTICS ====================
+INSERT INTO logistics (logisticsid, boothid, itemname, quantity, unitcost, status) VALUES
+(1, 'M101', 'Table', 2, 50, 'Delivered'),
+(2, 'M101', 'Chair', 4, 20, 'Delivered'),
+(3, 'M102', 'Table', 3, 50, 'Delivered'),
+(4, 'M102', 'Power Outlet', 2, 100, 'Delivered'),
+(5, 'M103', 'Table', 2, 50, 'Delivered'),
+(6, 'M105', 'Table', 1, 50, 'Requested'),
+(7, 'M107', 'Power Outlet', 4, 100, 'Delivered'),
+(8, 'M107', 'Chair', 6, 20, 'Delivered'),
+(9, 'P101', 'Table', 4, 50, 'Delivered'),
+(10, 'P101', 'Power Outlet', 6, 100, 'Delivered'),
+(11, 'P102', 'Table', 3, 50, 'Delivered'),
+(12, 'P102', 'Chair', 8, 20, 'Delivered'),
+(13, 'P103', 'Power Outlet', 2, 100, 'Requested'),
+(14, 'T101', 'Table', 2, 50, 'Delivered'),
+(15, 'T101', 'Chair', 10, 20, 'Delivered'),
+(16, 'T102', 'Power Outlet', 8, 100, 'Delivered'),
+(17, 'T103', 'Table', 3, 50, 'Requested');
+
+-- ==================== SPONSORSHIPS ====================
+INSERT INTO sponsorships (sponsorid, name, amount, description) VALUES
+(1, 'MegaCorp Industries', 25000, 'Platinum Sponsor'),
+(2, 'TechGiant Solutions', 15000, 'Gold Sponsor'),
+(3, 'AutoWorld Magazine', 10000, 'Gold Sponsor'),
+(4, 'Anime Network Asia', 8000, 'Silver Sponsor'),
+(5, 'Innovation Fund', 5000, 'Bronze Sponsor'),
+(6, 'Local Business Alliance', 3000, 'Bronze Sponsor');
+
+-- ==================== MARKETING CAMPAIGNS ====================
+INSERT INTO marketing_campaigns (campaignid, campaigntype, name, description, costtoevent, hypepoints, status, packageprice, targetvendorid, targetproductid, colorcode) VALUES
+(1, 'Street Team Promoters', 'Attack on Titan Poster Set', 'Flyers distributed at high-traffic areas.', 200, 120, 'Active', 500, 101, 1001, 10),
+(2, 'Online Banner Ads', 'Cosplay Armor Set', 'Online ads on partner websites.', 300, 300, 'Active', 1200, 103, 1007, 13),
+(3, 'TV Commercial Slot', 'AI Development Kit', '30-second prime time TV spot.', 1500, 1000, 'Active', 3000, 201, 2001, 12),
+(4, 'Online Banner Ads', 'Machine Learning Course', 'Online ads on partner websites.', 300, 300, 'Active', 1200, 203, 2004, 13),
+(5, 'TV Commercial Slot', 'Luxury Car Model', '30-second prime time TV spot.', 1500, 1000, 'Active', 3000, 301, 3001, 12),
+(6, 'TV Commercial Slot', 'EV Charging Station', '30-second prime time TV spot.', 1500, 1000, 'Active', 3000, 303, 3003, 12),
+(7, 'Social Media Campaign', 'Gaming Headset RGB', 'Targetting Instagram Reels Ads', 50, 50, 'Active', 300, 106, 1010, 11),
+(8, 'Street Team Promoters', 'VR Headset Pro', 'Flyers distributed at high-traffic areas.', 200, 120, 'Active', 500, 208, 2009, 10);
+
+-- ==================== ADDITIONAL VENDORS ====================
+-- More ComicFiesta Vendors
+INSERT INTO vendors (vendorid, name, email, isfeatured, registeredevents) VALUES
+(109, 'Japan Import', 'order@japanimport.com', false, 'Mid-Valley'),
+(110, 'Doujin Circle', 'create@doujincircle.com', false, 'Mid-Valley'),
+(111, 'Retro Games', 'play@retrogames.com', true, 'Mid-Valley'),
+(112, 'Anime Café', 'serve@animecafe.com', false, 'Mid-Valley'),
+
+-- More Tech Expo Vendors  
+(209, 'Quantum Labs', 'quantum@qlabs.com', false, 'Pavilion'),
+(210, 'IoT Systems', 'connect@iotsys.com', false, 'Pavilion'),
+(211, 'Blockchain Co', 'chain@blockchain.com', true, 'Pavilion'),
+(212, 'DroneWorks', 'fly@droneworks.com', false, 'Pavilion'),
+(213, 'BioTech Plus', 'research@biotech.com', false, 'Pavilion'),
+(214, 'GreenTech', 'eco@greentech.com', false, 'Pavilion'),
+
+-- More Car Expo Vendors
+(307, 'Racing Gear', 'speed@racinggear.com', false, 'TRX'),
+(308, 'Vintage Wheels', 'classic@vintagewheels.com', true, 'TRX'),
+(309, 'Car Audio Pro', 'sound@caraudio.com', false, 'TRX'),
+(310, 'Detail Masters', 'shine@detailmasters.com', false, 'TRX'),
+
+-- Cross-event vendors (attend multiple events)
+(401, 'Tech Merch Co', 'sales@techmerch.com', false, 'Mid-Valley;Pavilion;TRX'),
+(402, 'Photo Booth+', 'snap@photobooth.com', false, 'Mid-Valley;Pavilion;TRX'),
+(403, 'Event Supply', 'supply@eventsupply.com', false, 'Mid-Valley;Pavilion;TRX');
+
+-- ==================== ADDITIONAL BOOTHS ====================
+-- Mid-Valley Floor 3 expansion
+INSERT INTO booths (boothid, mallname, floorlevel, type, price, assignedvendorid, row, col) VALUES
+('M304', 'Mid-Valley', 3, 'Standard', 400, 109, 1, 1),
+('M305', 'Mid-Valley', 3, 'Standard', 400, 110, 2, 0),
+('M306', 'Mid-Valley', 3, 'Premium', 700, 111, 2, 1),
+('M307', 'Mid-Valley', 3, 'Standard', 400, 112, 2, 2),
+('M308', 'Mid-Valley', 3, 'Standard', 400, 401, 3, 0),
+('M309', 'Mid-Valley', 3, 'Standard', 400, 0, 3, 1),
+('M310', 'Mid-Valley', 3, 'Standard', 400, 0, 3, 2),
+
+-- Pavilion Floor 3 expansion
+('P303', 'Pavilion', 3, 'Standard', 600, 209, 1, 0),
+('P304', 'Pavilion', 3, 'Premium', 900, 210, 1, 1),
+('P305', 'Pavilion', 3, 'Standard', 600, 211, 2, 0),
+('P306', 'Pavilion', 3, 'Standard', 600, 212, 2, 1),
+('P307', 'Pavilion', 3, 'Standard', 600, 213, 3, 0),
+('P308', 'Pavilion', 3, 'Premium', 900, 214, 3, 1),
+('P309', 'Pavilion', 3, 'Standard', 600, 401, 3, 2),
+
+-- TRX Floor 3 expansion
+('T303', 'TRX', 3, 'Standard', 800, 307, 1, 0),
+('T304', 'TRX', 3, 'Premium', 1100, 308, 1, 1),
+('T305', 'TRX', 3, 'Standard', 800, 309, 2, 0),
+('T306', 'TRX', 3, 'Standard', 800, 310, 2, 1),
+('T307', 'TRX', 3, 'Standard', 800, 401, 3, 0),
+('T308', 'TRX', 3, 'Standard', 800, 402, 3, 1);
+
+-- ==================== ADDITIONAL PRODUCTS ====================
+-- New ComicFiesta Products
+INSERT INTO products (productid, vendorid, name, price) VALUES
+(1014, 109, 'Exclusive Import Box', 150.00),
+(1015, 109, 'Gashapon Set', 45.00),
+(1016, 110, 'Original Artbook', 35.00),
+(1017, 110, 'Fan Comics Bundle', 25.00),
+(1018, 111, 'Arcade Stick Pro', 189.99),
+(1019, 111, 'Retro Console Mini', 79.99),
+(1020, 112, 'Themed Bento Box', 15.00),
+(1021, 112, 'Anime Drink Set', 8.50),
+
+-- New Tech Products
+(2010, 209, 'Quantum Computer Kit', 2999.99),
+(2011, 210, 'Smart Sensor Pack', 149.99),
+(2012, 211, 'Crypto Wallet Hardware', 199.99),
+(2013, 212, 'Professional Drone', 1499.99),
+(2014, 213, 'DNA Analysis Kit', 399.99),
+(2015, 214, 'Solar Panel Mini', 299.99),
+
+-- New Car Products
+(3007, 307, 'Racing Helmet Pro', 650.00),
+(3008, 308, 'Classic Parts Catalog', 75.00),
+(3009, 309, 'Subwoofer System', 450.00),
+(3010, 310, 'Ceramic Coating Kit', 250.00),
+
+-- Cross-event Products
+(4001, 401, 'Event T-Shirts', 25.00),
+(4002, 402, 'Photo Print Package', 15.00),
+(4003, 403, 'Display Stand Rental', 50.00);
+
+-- ==================== ADDITIONAL BOOKINGS WITH CONTRACTS ====================
+INSERT INTO bookings (bookingid, boothid, vendorid, startdate, enddate, status, contractterms, regulations) VALUES
+-- Mid-Valley additional bookings
+(24, 'M304', 109, '2025-01-15', '2025-01-18', 'Confirmed', 'Payment via wire transfer', 'Import documentation required'),
+(25, 'M305', 110, '2025-01-15', '2025-01-18', 'Confirmed', 'Artist alley special terms', 'Content rating PG-13 maximum'),
+(26, 'M306', 111, '2025-01-15', '2025-01-18', 'Confirmed', 'Net 60 payment terms', 'Playable demos required'),
+(27, 'M307', 112, '2025-01-15', '2025-01-18', 'Confirmed', 'Daily settlement', 'Food handling permit required'),
+(28, 'M308', 401, '2025-01-15', '2025-01-18', 'Confirmed', 'Multi-event discount applied', 'Standard vendor agreement'),
+
+-- Pavilion additional bookings
+(29, 'P303', 209, '2025-02-01', '2025-02-04', 'Confirmed', 'Research grant billing', 'Safety clearance for quantum equipment'),
+(30, 'P304', 210, '2025-02-01', '2025-02-04', 'Confirmed', 'Net 45 payment terms', 'Network security audit required'),
+(31, 'P305', 211, '2025-02-01', '2025-02-04', 'Confirmed', 'Cryptocurrency accepted', 'Financial compliance verification'),
+(32, 'P306', 212, '2025-02-01', '2025-02-04', 'Confirmed', 'Insurance deposit required', 'FAA compliance for drone demos'),
+(33, 'P307', 213, '2025-02-01', '2025-02-04', 'Confirmed', 'University billing', 'Biohazard protocols must be followed'),
+(34, 'P308', 214, '2025-02-01', '2025-02-04', 'Confirmed', 'Green initiative discount', 'Sustainability certification required'),
+(35, 'P309', 401, '2025-02-01', '2025-02-04', 'Confirmed', 'Multi-event discount applied', 'Standard vendor agreement'),
+
+-- TRX additional bookings
+(36, 'T303', 307, '2025-03-10', '2025-03-13', 'Confirmed', 'Sponsorship offset billing', 'Safety equipment display only'),
+(37, 'T304', 308, '2025-03-10', '2025-03-13', 'Confirmed', 'Auction house terms', 'Authentication certificates required'),
+(38, 'T305', 309, '2025-03-10', '2025-03-13', 'Confirmed', 'Installation service included', 'Sound level limits enforced'),
+(39, 'T306', 310, '2025-03-10', '2025-03-13', 'Confirmed', 'Service package billing', 'Chemical storage compliance'),
+(40, 'T307', 401, '2025-03-10', '2025-03-13', 'Confirmed', 'Multi-event discount applied', 'Standard vendor agreement'),
+(41, 'T308', 402, '2025-03-10', '2025-03-13', 'Confirmed', 'Revenue sharing model', 'Privacy policy compliance required');
+
+-- ==================== ADDITIONAL TRANSACTIONS ====================
+-- New booth rentals
+INSERT INTO transactions (transactionid, vendorid, amount, description) VALUES
+(30, 109, 400, 'Booth Rental Fee M304'),
+(31, 110, 400, 'Booth Rental Fee M305'),
+(32, 111, 700, 'Booth Rental Fee M306'),
+(33, 112, 400, 'Booth Rental Fee M307'),
+(34, 401, 400, 'Booth Rental Fee M308'),
+(35, 209, 600, 'Booth Rental Fee P303'),
+(36, 210, 900, 'Booth Rental Fee P304'),
+(37, 211, 600, 'Booth Rental Fee P305'),
+(38, 212, 600, 'Booth Rental Fee P306'),
+(39, 213, 600, 'Booth Rental Fee P307'),
+(40, 214, 900, 'Booth Rental Fee P308'),
+(41, 401, 600, 'Booth Rental Fee P309'),
+(42, 307, 800, 'Booth Rental Fee T303'),
+(43, 308, 1100, 'Booth Rental Fee T304'),
+(44, 309, 800, 'Booth Rental Fee T305'),
+(45, 310, 800, 'Booth Rental Fee T306'),
+(46, 401, 800, 'Booth Rental Fee T307'),
+(47, 402, 800, 'Booth Rental Fee T308'),
+
+-- Additional marketing campaigns sold
+(48, 111, 300, 'Social Media Campaign Pkg for Retro Console Mini'),
+(49, 209, 500, 'Street Team Promoters Pkg for Quantum Computer Kit'),
+(50, 211, 1200, 'Online Banner Ads Pkg for Crypto Wallet Hardware'),
+(51, 308, 500, 'Street Team Promoters Pkg for Classic Parts Catalog'),
+(52, 402, 300, 'Social Media Campaign Pkg for Photo Print Package'),
+
+-- Some refunds/adjustments
+(53, 105, -100, 'Refund: Partial booth fee adjustment'),
+(54, 202, -50, 'Refund: Overcharge correction');
+
+-- ==================== ADDITIONAL LOGISTICS ====================
+INSERT INTO logistics (logisticsid, boothid, itemname, quantity, unitcost, status) VALUES
+-- New booth equipment requests
+(18, 'M304', 'Table', 3, 50, 'Delivered'),
+(19, 'M304', 'Chair', 6, 20, 'Delivered'),
+(20, 'M305', 'Table', 2, 50, 'Delivered'),
+(21, 'M306', 'Power Outlet', 4, 100, 'Delivered'),
+(22, 'M306', 'Table', 4, 50, 'Delivered'),
+(23, 'M307', 'Table', 2, 50, 'Requested'),
+(24, 'M307', 'Power Outlet', 2, 100, 'Delivered'),
+(25, 'P303', 'Power Outlet', 10, 100, 'Delivered'),
+(26, 'P304', 'Table', 3, 50, 'Delivered'),
+(27, 'P305', 'Chair', 4, 20, 'Delivered'),
+(28, 'P306', 'Table', 5, 50, 'Requested'),
+(29, 'P307', 'Power Outlet', 3, 100, 'Delivered'),
+(30, 'P308', 'Table', 2, 50, 'Delivered'),
+(31, 'T303', 'Chair', 8, 20, 'Delivered'),
+(32, 'T304', 'Table', 4, 50, 'Delivered'),
+(33, 'T305', 'Power Outlet', 6, 100, 'Delivered'),
+(34, 'T306', 'Table', 3, 50, 'Delivered'),
+(35, 'T306', 'Chair', 6, 20, 'Requested');
+
+-- ==================== ADDITIONAL SPONSORSHIPS ====================
+INSERT INTO sponsorships (sponsorid, name, amount, description) VALUES
+(7, 'Gaming Hardware Ltd', 12000, 'Gold Sponsor - ComicFiesta'),
+(8, 'Cloud Services Inc', 20000, 'Platinum Sponsor - Tech Expo'),
+(9, 'Automotive Weekly', 15000, 'Gold Sponsor - Car Expo'),
+(10, 'City Tourism Board', 10000, 'Silver Sponsor - All Events'),
+(11, 'Youth Development Fund', 5000, 'Bronze Sponsor'),
+(12, 'Tech Startup Incubator', 8000, 'Silver Sponsor - Tech Expo');
+
+-- ==================== ADDITIONAL MARKETING CAMPAIGNS ====================
+INSERT INTO marketing_campaigns (campaignid, campaigntype, name, description, costtoevent, hypepoints, status, packageprice, targetvendorid, targetproductid, colorcode) VALUES
+(9, 'Social Media Campaign', 'Retro Console Mini', 'Targetting Instagram Reels Ads', 50, 50, 'Active', 300, 111, 1019, 11),
+(10, 'Street Team Promoters', 'Quantum Computer Kit', 'Flyers distributed at universities', 200, 120, 'Active', 500, 209, 2010, 10),
+(11, 'Online Banner Ads', 'Crypto Wallet Hardware', 'Tech blog advertisements', 300, 300, 'Active', 1200, 211, 2012, 13),
+(12, 'Street Team Promoters', 'Classic Parts Catalog', 'Car show distribution', 200, 120, 'Active', 500, 308, 3008, 10),
+(13, 'Social Media Campaign', 'Photo Print Package', 'Facebook event promotion', 50, 50, 'Active', 300, 402, 4002, 11),
+(14, 'TV Commercial Slot', 'Professional Drone', '30-second tech channel spot', 1500, 1000, 'Active', 3000, 212, 2013, 12),
+(15, 'Online Banner Ads', 'Racing Helmet Pro', 'Motorsport website ads', 300, 300, 'Active', 1200, 307, 3007, 13);
+
+
+INSERT INTO feedbacks (feedbackId, vendorId, rating, comment) VALUES
+(1, 101, 5, 'Amazing poster quality, fast checkout'),
+(2, 102, 4, 'Great manga bundle, stock ran low by day 2'),
+(3, 103, 5, 'Cosplay advice was super helpful'),
+(4, 104, 3, 'Figure selection ok, prices a bit high'),
+(5, 105, 4, 'T-shirts comfy, sizes accurate'),
+(6, 106, 5, 'Headsets demo was top tier'),
+(7, 107, 5, 'Artists friendly, prints packed well'),
+(8, 108, 4, 'Cute plushies, queue a little long'),
+
+(9, 201, 5, 'AI kit demo was professional'),
+(10, 202, 4, 'Cloud plan explained clearly'),
+(11, 203, 5, 'ML course rep answered all Qs'),
+(12, 204, 4, 'Robot demo drew big crowd'),
+(13, 205, 5, 'Security tips were practical'),
+(14, 206, 4, 'Analytics tool UI looks clean'),
+(15, 207, 5, 'Smart hub works as advertised'),
+(16, 208, 5, 'VR experience was smooth'),
+
+(17, 301, 5, 'Luxury car booth stunning'),
+(18, 302, 4, 'Parts info clear, delivery options ok'),
+(19, 303, 5, 'EV charging demo was insightful'),
+(20, 304, 3, 'Classic display nice, staff busy'),
+(21, 305, 4, 'Tuning tips were detailed'),
+(22, 306, 4, 'Oil kit bundle good value'),
+
+-- extra Mid-Valley vendors
+(23, 109, 4, 'Imports authentic, fair price'),
+(24, 110, 5, 'Original art loved by fans'),
+(25, 111, 5, 'Retro console nostalgia hit'),
+(26, 112, 4, 'Cafe theme cute, wait short'),
+
+-- extra Pavilion vendors
+(27, 209, 5, 'Quantum kit pitch impressive'),
+(28, 210, 4, 'IoT demo stable, docs promised'),
+(29, 211, 4, 'Wallet security well explained'),
+(30, 212, 5, 'Drone demo jaw-dropping'),
+(31, 213, 4, 'BioTech showcase informative'),
+(32, 214, 5, 'GreenTech booth engaging'),
+
+-- extra TRX + cross-event vendors
+(33, 307, 5, 'Racing gear quality top-notch'),
+(34, 308, 4, 'Vintage items verified'),
+(35, 309, 4, 'Audio tuning sounded clean'),
+(36, 310, 4, 'Detailing tips helpful'),
+(37, 401, 5, 'Merch variety broad'),
+(38, 402, 5, 'Photo prints crisp'),
+(39, 403, 4, 'Display rentals convenient'),
+
+-- a few mixed/low ratings for realism
+(40, 101, 2, 'Poster tube ran out near closing'),
+(41, 202, 2, 'Promo code didn’t apply first try'),
+(42, 304, 2, 'Staff hard to find at peak time'),
+(43, 206, 3, 'Demo PC lagged once'),
+(44, 305, 3, 'Install slot fully booked'),
+
+-- more repeat feedbacks on popular vendors
+(45, 103, 5, 'Armor fit perfectly after advice'),
+(46, 201, 4, 'Bundle discount appreciated'),
+(47, 208, 5, 'VR queue well managed'),
+(48, 301, 5, 'Photo ops were organized'),
+(49, 211, 4, 'Nice cold-storage case'),
+(50, 111, 5, 'Arcade stick feels premium');
